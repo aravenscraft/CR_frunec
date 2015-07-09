@@ -10,6 +10,7 @@
 #install.packages("phyloseq")
 require(phyloseq)
 require(ape)
+#adding a line of code here
 
 #change this to the folder that contains the bacterial data
 setwd('~/Documents/2010 STANFORD/2015_3 summer/frunec')
