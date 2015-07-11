@@ -1,0 +1,874 @@
+library(lme4)
+source('~/Documents/2010 STANFORD/2014_1 winter/Analyses/myfunctions.R', chdir = TRUE)
+rmbl <- read.csv("~/Dropbox/RMBL DATA/RMBL_COMPILED_forR2.csv")
+ed <- read.csv("~/Dropbox/RMBL DATA/earlydeaths_compiled_forR.csv")
+names(rmbl)
+names(ed)
+ed <- read.csv("~/Dropbox/RMBL DATA/earlydeaths_compiled_forR_notags.csv")
+names(ed)
+rmbl <- rbind(rmbl,ed)
+trtmt <- substr(rmbl$specid,start=1, stop=2)#
+gut <- substr(trtmt, start=1, stop=1)#
+feed <- substr(trtmt, start=2, stop=2)#
+block <- as.numeric(substr(rmbl$specid, start=3, stop=5))#
+#
+rmbl <- transform (rmbl, trtmt=trtmt, gut=gut, feed=feed, block=block) #NB: "E" bugs will not parse correctly.#
+#
+rmbl$date <- dates(as.character(rmbl$date))#
+rmbl$time <- times(as.character(rmbl$time))#
+timept <- chron(dates=rmbl$date, times=rmbl$time)#
+rmbl <- transform(rmbl, timept= timept, cumudays=NA)#
+#
+# Put into chronologial order by bug.#
+rmbl <- rmbl[order(rmbl$block,rmbl$gut,rmbl$feed,rmbl$date,rmbl$time),]
+rmbl[which(rmbl$gut=='E'),]
+eee <- read.csv("eeee_withlifespans.csv")
+eee <- read.csv("~/Dropbox/RMBL DATA/eeee_withlifespans.csv")
+names(eee)
+names(rmbl)
+rmbl <- read.csv("~/Dropbox/RMBL DATA/RMBL_COMPILED_forR2.csv")
+names(rmbl)
+names(eee)
+library(chron)
+library(lme4)
+source('~/Documents/2010 STANFORD/2014_1 winter/Analyses/myfunctions.R', chdir = TRUE)
+rmbl <- read.csv("~/Dropbox/RMBL DATA/RMBL_COMPILED_forR2.csv")
+ed <- read.csv("~/Dropbox/RMBL DATA/earlydeaths_compiled_forR_notags.csv")
+names(rmbl)==names(ed)
+rmbl <- rbind(rmbl,ed)
+rmbl <- read.csv("~/Dropbox/RMBL DATA/RMBL_COMPILED_forR2.csv")
+rmbl <- transform(rmbl,bug.type='exp')
+head(rmbl)
+ed <- read.csv("~/Dropbox/RMBL DATA/earlydeaths_compiled_forR_notags.csv")
+ed <- transform(ed, bug.type="earlydeath")
+head(ed)
+rmbl <- rbind(rmbl,ed)
+head(rmbl)
+rmbl
+nrow(rmbl)
+trtmt <- substr(rmbl$specid,start=1, stop=2)#
+gut <- substr(trtmt, start=1, stop=1)#
+feed <- substr(trtmt, start=2, stop=2)#
+block <- as.numeric(substr(rmbl$specid, start=3, stop=5))#
+rmbl <- transform (rmbl, trtmt=trtmt, gut=gut, feed=feed, block=block)
+ed$specid
+rmbl$specid
+rmbl$date <- dates(as.character(rmbl$date))#
+rmbl$time <- times(as.character(rmbl$time))#
+timept <- chron(dates=rmbl$date, times=rmbl$time)#
+rmbl <- transform(rmbl, timept= timept, cumudays=NA)#
+#
+rmbl <- rmbl[order(rmbl$block,rmbl$gut,rmbl$feed,rmbl$date,rmbl$time),]
+rmbl <- rmbl[which(rmbl$gut!='E'),]
+rmbl <- droplevels(rmbl)#
+#
+bugs <- unique(rmbl$specid)#
+#
+for (i in 1:101) {#
+	bug <- as.character(bugs[i])#
+	bugdata <- rmbl[which(rmbl$specid==bug),]#
+	firstoccur <- min(which(rmbl$specid == bug))#
+	#lastoccur <- max(which(rmbl$specid == bug))#
+	#if (rmbl[firstoccur,'event'] != 'capture') print(paste("error in capture for ",bug))#
+	#if (rmbl[lastoccur,'event'] != 'death') print(paste("error in death for ",bug))#
+	rmbl[firstoccur, 'cumudays'] <- 0#
+	for (j in 1:nrow(bugdata)) {#
+			rmbl[firstoccur+j, 'cumudays'] <- ( rmbl[firstoccur+j,'timept']- rmbl[firstoccur,'timept'] )#
+	}#
+}
+tail(rmbl)
+nrow(rmbl)
+rmbl <- rmbl[1:3133,] #get rid of extraneous empty row
+tail(rmbl)
+rmbl$translated.days <- round(rmbl$cumudays,0)
+eee <- read.csv("~/Dropbox/RMBL DATA/eeee_withlifespans.csv")
+names(eee)
+setdiff(names(rmbl),names(eee))
+eee <- transform(eee, bug.type="E")
+head(eee)
+rmbl <- rbind(rmbl, eee)
+eee <- read.csv("~/Dropbox/RMBL DATA/eeee_withlifespans.csv")
+timept <- chron(dates=eee$date, times=eee$time)
+eee <- read.csv("~/Dropbox/RMBL DATA/eeee_withlifespans.csv")
+eee$date <- dates(as.character(rmbl$date))
+eee$time <- times(as.character(rmbl$time))
+timept <- chron(dates=eee$date, times=eee$time)
+eee <- read.csv("~/Dropbox/RMBL DATA/eeee_withlifespans.csv")#
+eee$date <- dates(as.character(eee$date))#
+eee$time <- times(as.character(eee$time))
+timept <- chron(dates=eee$date, times=eee$time)
+chron(eee$timept)
+chron(as.character(eee$timept))
+timept
+eee <- read.csv("~/Dropbox/RMBL DATA/eeee_withlifespans.csv")#
+eee$date <- dates(as.character(eee$date))#
+eee$time <- times(as.character(eee$time))#
+eee$timept <- chron(dates=eee$date, times=eee$time)
+eee <- transform(eee, bug.type="E")
+rmbl <- rbind(rmbl,ed)
+trtmt <- substr(rmbl$specid,start=1, stop=2)#
+gut <- substr(trtmt, start=1, stop=1)#
+feed <- substr(trtmt, start=2, stop=2)#
+block <- as.numeric(substr(rmbl$specid, start=3, stop=5))#
+rmbl <- transform (rmbl, trtmt=trtmt, gut=gut, feed=feed, block=block)#
+# Put into chronologial order by bug.#
+rmbl$date <- dates(as.character(rmbl$date))#
+rmbl$time <- times(as.character(rmbl$time))#
+timept <- chron(dates=rmbl$date, times=rmbl$time)#
+rmbl <- transform(rmbl, timept= timept, cumudays=NA)#
+#
+rmbl <- rmbl[order(rmbl$block,rmbl$gut,rmbl$feed,rmbl$date,rmbl$time),]
+rmbl <- rmbl[which(rmbl$gut!='E'),]
+rmbl <- droplevels(rmbl)#
+#
+bugs <- unique(rmbl$specid)#
+#
+for (i in 1:101) {#
+	bug <- as.character(bugs[i])#
+	bugdata <- rmbl[which(rmbl$specid==bug),]#
+	firstoccur <- min(which(rmbl$specid == bug))#
+	#lastoccur <- max(which(rmbl$specid == bug))#
+	#if (rmbl[firstoccur,'event'] != 'capture') print(paste("error in capture for ",bug))#
+	#if (rmbl[lastoccur,'event'] != 'death') print(paste("error in death for ",bug))#
+	rmbl[firstoccur, 'cumudays'] <- 0#
+	for (j in 1:nrow(bugdata)) {#
+			rmbl[firstoccur+j, 'cumudays'] <- ( rmbl[firstoccur+j,'timept']- rmbl[firstoccur,'timept'] )#
+	}#
+}#
+#
+rmbl <- rmbl[1:3133,]
+rmbl$translated.days <- round(rmbl$cumudays,0)
+names(eee)==names(rmbl)
+names(eee)
+names(rmbl)
+eee <- eee[,c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,22,15,16,17,18,19,20,21)]
+names(eee)==names(rmbl)
+rmbl <- rbind(rmbl, eee)
+tail(rmbl)
+nrow(rmbl)
+library(chron)#
+library(lme4)#
+source('~/Documents/2010 STANFORD/2014_1 winter/Analyses/myfunctions.R', chdir = TRUE)
+rmbl <- read.csv("~/Dropbox/RMBL DATA/RMBL_COMPILED_forR2.csv")#
+rmbl <- transform(rmbl, bug.type='exp')
+trtmt <- substr(rmbl$specid,start=1, stop=2)#
+gut <- substr(trtmt, start=1, stop=1)#
+feed <- substr(trtmt, start=2, stop=2)#
+block <- as.numeric(substr(rmbl$specid, start=3, stop=5))#
+rmbl <- transform (rmbl, trtmt=trtmt, gut=gut, feed=feed, block=block)#
+# Put into chronologial order by bug.#
+rmbl$date <- dates(as.character(rmbl$date))#
+rmbl$time <- times(as.character(rmbl$time))#
+timept <- chron(dates=rmbl$date, times=rmbl$time)#
+rmbl <- transform(rmbl, timept= timept, cumudays=NA)#
+#
+rmbl <- rmbl[order(rmbl$block,rmbl$gut,rmbl$feed,rmbl$date,rmbl$time),]#
+# Remove the "E" bugs; I will add them back later in the appropriate format #
+rmbl <- rmbl[which(rmbl$gut!='E'),]#
+# Calculate cumulative lifespan in lab for each measurement.#
+rmbl <- droplevels(rmbl)#
+#
+bugs <- unique(rmbl$specid)#
+#
+for (i in 1:length(bugs)) {#
+	bug <- as.character(bugs[i])#
+	bugdata <- rmbl[which(rmbl$specid==bug),]#
+	firstoccur <- min(which(rmbl$specid == bug))#
+	#lastoccur <- max(which(rmbl$specid == bug))#
+	#if (rmbl[firstoccur,'event'] != 'capture') print(paste("error in capture for ",bug))#
+	#if (rmbl[lastoccur,'event'] != 'death') print(paste("error in death for ",bug))#
+	rmbl[firstoccur, 'cumudays'] <- 0#
+	for (j in 1:nrow(bugdata)) {#
+			rmbl[firstoccur+j, 'cumudays'] <- ( rmbl[firstoccur+j,'timept']- rmbl[firstoccur,'timept'] )#
+	}#
+}
+tail(rmbl)
+rmbl <- rmbl[1:2950,] #get rid of extraneous empty row
+rmbl$translated.days <- round(rmbl$cumudays,0)#
+# Add the 'E' bugs to the dataset. I manually added the 'E' bugs' treatment info to the csv below; othersise this csv was created by "RMBL data generation-- eeee.R" #
+eee <- read.csv("~/Dropbox/RMBL DATA/eeee_withlifespans.csv")#
+eee$date <- dates(as.character(eee$date))#
+eee$time <- times(as.character(eee$time))#
+eee$timept <- chron(dates=eee$date, times=eee$time)#
+#
+eee <- transform(eee, bug.type="E")#
+eee <- eee[,c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,22,15,16,17,18,19,20,21)] #make the order of the columns match.#
+#
+rmbl <- rbind(rmbl, eee)#
+#
+rmbl$block <- as.numeric(rmbl$block)
+rmbl$newid <- chartr('GgCFf','abcjk',rmbl$specid)#
+#
+for (i in 1:nrow(rmbl)) {#
+	if (rmbl[i,'block'] < 10) {#
+		rmbl[i,'newid'] <- paste(substr(rmbl[i,'newid'],start=1,stop=2),0,substr(rmbl[i,'newid'],start=3,stop=4), sep='')#
+	}#
+}	#
+#
+rmbl$newid <- as.factor(rmbl$newid)
+ed <- read.csv("~/Dropbox/RMBL DATA/earlydeaths_compiled_forR_notags.csv")
+trtmt <- substr(ed$specid,start=1, stop=2)#
+gut <- substr(trtmt, start=1, stop=1)#
+feed <- substr(trtmt, start=2, stop=2)#
+block <- as.numeric(substr(ed$specid, start=3, stop=5))#
+#
+ed <- transform (ed, trtmt=trtmt, gut=gut, feed=feed, block=block)#
+#
+ed$date <- dates(as.character(ed$date))#
+ed$time <- times(as.character(ed$time))#
+timept <- chron(dates=ed$date, times=ed$time)#
+ed <- transform(ed, timept= timept, cumudays=NA)#
+#
+# Put into chronologial order by bug.#
+ed <- ed[order(ed$block,ed$gut, ed$feed,ed$date,ed$time),]#
+# Calculate cumulative lifespan in lab for each measurement.#
+ed <- droplevels(ed)#
+#
+bugs <- unique(ed$tag)#
+#
+for (i in 1:length(bugs)) {#
+	bug <- as.character(bugs[i])#
+	bugdata <- ed[which(ed$tag==bug),]#
+	firstoccur <- min(which(ed$tag == bug))#
+	#lastoccur <- max(which(ed$specid == bug))#
+	#if (ed[firstoccur,'event'] != 'capture') print(paste("error in capture for ",bug))#
+	#if (ed[lastoccur,'event'] != 'death') print(paste("error in death for ",bug))#
+	ed[firstoccur, 'cumudays'] <- 0#
+	for (j in 1:nrow(bugdata)) {#
+			ed[firstoccur+j, 'cumudays'] <- ( ed[firstoccur+j,'timept']- ed[firstoccur,'timept'] )#
+	}#
+}#
+#
+rownames(ed) <- NULL
+tail(ed)
+bugs
+table(ed$specid)
+ed <- read.csv("~/Dropbox/RMBL DATA/earlydeaths_compiled_forR_notags.csv")
+trtmt <- substr(ed$specid,start=1, stop=2)#
+gut <- substr(trtmt, start=1, stop=1)#
+feed <- substr(trtmt, start=2, stop=2)#
+block <- as.numeric(substr(ed$specid, start=3, stop=5))#
+#
+ed <- transform (ed, trtmt=trtmt, gut=gut, feed=feed, block=block)#
+#
+ed$date <- dates(as.character(ed$date))#
+ed$time <- times(as.character(ed$time))#
+timept <- chron(dates=ed$date, times=ed$time)#
+ed <- transform(ed, timept= timept, cumudays=NA)#
+#
+# Put into chronologial order by bug.#
+ed <- ed[order(ed$block,ed$gut, ed$feed,ed$date,ed$time),]
+ed <- read.csv("~/Dropbox/RMBL DATA/earlydeaths_compiled_forR_notags.csv")
+trtmt <- substr(ed$specid,start=1, stop=2)#
+gut <- substr(trtmt, start=1, stop=1)#
+feed <- substr(trtmt, start=2, stop=2)#
+block <- as.numeric(substr(ed$specid, start=3, stop=5))#
+#
+ed <- transform (ed, trtmt=trtmt, gut=gut, feed=feed, block=block)#
+#
+ed$date <- dates(as.character(ed$date))#
+ed$time <- times(as.character(ed$time))#
+timept <- chron(dates=ed$date, times=ed$time)#
+ed <- transform(ed, timept= timept, cumudays=NA)
+master <- read.csv('~/Documents/2010 STANFORD/2015_2 spring/illumina/RMBL mapping_onlyRMBL.csv')#
+master$date.collection <- dates(as.character(master$date.collection))#
+master$date.death <- dates(as.character(master$date.death))
+master <- master[which(master$tag!='Cf14_8.25'),] # Because Cf14 was included in the run twice, I am removing the instance with the incorrect date in the tag
+saddata <- ed
+saddata$tag <- NA
+head(saddata)
+for (i in 1:nrow(saddata)) {#
+	needs_tag <- as.character(saddata$newid[i])#
+	if (!is.na(needs_tag)) {#
+		hold <- master[which(master$newid==needs_tag),]#
+		# If there were no earlydeaths, this identifier is unique.#
+		if (nrow(hold)==1) {#
+			saddata[i,'tag'] <- as.character(hold$tag)#
+		}	#
+		# If there was at least one earlydeath, compare the date to when the bugs were alive.#
+		if (nrow(hold) > 1) {#
+			date.sad <- saddata[i,'date']#
+			rw <- which(hold$date.collection <= date.sad & hold$date.death >= date.sad)#
+			if (length(rw)==1) { saddata[i,'tag'] <- as.character(hold[rw,'tag']) }#
+			# For cases where an earlydeath died and was replaced on the same day:#
+			if (length(rw) > 1) {		#
+				event <- as.character(saddata[i,'event'])#
+				if (event == 'capture') {#
+					rw.cap <- rw[2]#
+					saddata[i,'tag'] <- as.character(hold[rw.cap,'tag'])#
+				}#
+				# If the replacement was captured *and* fed on the same day the earlydeath died:#
+				if (event == 'feed' & saddata[i-1,'event'] == 'capture') {#
+					rw.cap <- rw[2]#
+					saddata[i,'tag'] <- as.character(hold[rw.cap,'tag'])#
+				}#
+			}	#
+		}#
+	}#
+}
+i
+needs_tag
+ed <- read.csv("~/Dropbox/RMBL DATA/earlydeaths_compiled_forR_notags.csv")
+trtmt <- substr(ed$specid,start=1, stop=2)#
+gut <- substr(trtmt, start=1, stop=1)#
+feed <- substr(trtmt, start=2, stop=2)#
+block <- as.numeric(substr(ed$specid, start=3, stop=5))#
+#
+ed <- transform (ed, trtmt=trtmt, gut=gut, feed=feed, block=block)#
+#
+ed$date <- dates(as.character(ed$date))#
+ed$time <- times(as.character(ed$time))#
+timept <- chron(dates=ed$date, times=ed$time)#
+ed <- transform(ed, timept= timept, cumudays=NA)#
+# Create new IDs that are easier to sort in Excel.#
+ed$newid <- chartr('GgCFf','abcjk',ed$specid)#
+#
+for (i in 1:nrow(ed)) {#
+	if (ed[i,'block'] < 10) {#
+		ed[i,'newid'] <- paste(substr(ed[i,'newid'],start=1,stop=2),0,substr(ed[i,'newid'],start=3,stop=4), sep='')#
+	}#
+}	#
+#
+ed$newid <- as.factor(ed$newid)
+master <- read.csv('~/Documents/2010 STANFORD/2015_2 spring/illumina/RMBL mapping_onlyRMBL.csv')#
+master$date.collection <- dates(as.character(master$date.collection))#
+master$date.death <- dates(as.character(master$date.death))#
+#
+master <- master[which(master$tag!='Cf14_8.25'),] # Because Cf14 was included in the run twice, I am removing the instance with the incorrect date in the tag#
+#
+#data to which you need to add unique tags#
+saddata <- ed#
+#
+saddata$tag <- NA#
+head(saddata)
+for (i in 1:nrow(saddata)) {#
+	needs_tag <- as.character(saddata$newid[i])#
+	if (!is.na(needs_tag)) {#
+		hold <- master[which(master$newid==needs_tag),]#
+		# If there were no earlydeaths, this identifier is unique.#
+		if (nrow(hold)==1) {#
+			saddata[i,'tag'] <- as.character(hold$tag)#
+		}	#
+		# If there was at least one earlydeath, compare the date to when the bugs were alive.#
+		if (nrow(hold) > 1) {#
+			date.sad <- saddata[i,'date']#
+			rw <- which(hold$date.collection <= date.sad & hold$date.death >= date.sad)#
+			if (length(rw)==1) { saddata[i,'tag'] <- as.character(hold[rw,'tag']) }#
+			# For cases where an earlydeath died and was replaced on the same day:#
+			if (length(rw) > 1) {		#
+				event <- as.character(saddata[i,'event'])#
+				if (event == 'capture') {#
+					rw.cap <- rw[2]#
+					saddata[i,'tag'] <- as.character(hold[rw.cap,'tag'])#
+				}#
+				# If the replacement was captured *and* fed on the same day the earlydeath died:#
+				if (event == 'feed' & saddata[i-1,'event'] == 'capture') {#
+					rw.cap <- rw[2]#
+					saddata[i,'tag'] <- as.character(hold[rw.cap,'tag'])#
+				}#
+			}	#
+		}#
+	}#
+}
+head(saddata)
+tail(saddata)
+saddata[which(is.na(saddata$tag)),]
+master[which(master$newid==saddata[which(is.na(saddata$tag)),"newid"]),]
+master[which(master$newid=="aj10"),]
+ed[which(ed$newid=='aj10'),]
+saddata[which(saddata$newid=='aj10'),]
+saddata[which(saddata$newid=='ak13'),]
+i <- 75
+needs_tag <- as.character(saddata$newid[i])
+needs_tag
+hold <- master[which(master$newid==needs_tag),]
+nrow(hold)==1
+nrow(hold) > 1
+date.sad <- saddata[i,'date']
+date.sad
+rw <- which(hold$date.collection <= date.sad & hold$date.death >= date.sad)
+rw
+hold[which(hold$date.collection <= date.sad & hold$date.death >= date.sad),]
+length(rw) > 1
+event <- as.character(saddata[i,'event'])
+event
+event == 'feed' & saddata[i-1,'event'] == 'capture'
+event == 'capture'
+saddata[i-1,'event']
+saddata[which(saddata$newid==needs_tag),]
+hold
+rmbl[which(rmbl$newid==needs.tag),]
+rmbl[which(rmbl$newid==needs_tag),]
+hold
+event
+rw.cap
+rw
+(event == 'feed' & saddata[i+1,'event'] == 'death')
+rw.predeath <- rw[1]
+saddata[i,'tag'] <- as.character(hold[rw.predeath,'tag'])
+saddata[i,]
+i <- 74
+needs_tag <- as.character(saddata$newid[i])#
+	if (!is.na(needs_tag)) {#
+		hold <- master[which(master$newid==needs_tag),]#
+		# If there were no earlydeaths, this identifier is unique.#
+		if (nrow(hold)==1) {#
+			saddata[i,'tag'] <- as.character(hold$tag)#
+		}	#
+		# If there was at least one earlydeath, compare the date to when the bugs were alive.#
+		if (nrow(hold) > 1) {#
+			date.sad <- saddata[i,'date']#
+			rw <- which(hold$date.collection <= date.sad & hold$date.death >= date.sad)#
+			if (length(rw)==1) { saddata[i,'tag'] <- as.character(hold[rw,'tag']) }#
+			# For cases where an earlydeath died and was replaced on the same day:#
+			if (length(rw) > 1) {		#
+				event <- as.character(saddata[i,'event'])#
+				if (event == 'capture') {#
+					rw.cap <- rw[2]#
+					saddata[i,'tag'] <- as.character(hold[rw.cap,'tag'])#
+				}#
+				# If the replacement was captured *and* fed on the same day the earlydeath died:#
+				if (event == 'feed' & saddata[i-1,'event'] == 'capture') {#
+					rw.cap <- rw[2]#
+					saddata[i,'tag'] <- as.character(hold[rw.cap,'tag'])#
+				}#
+#
+				# If the original died (and was then replaced)#
+				if (event == 'death') {#
+					rw.death <- rw[1]#
+					saddata[i,'tag'] <- as.character(hold[rw.death,'tag'])#
+				}#
+				# If the original was fed on the day it died (but then died and was replaced immediately)#
+				if (event == 'feed' & saddata[i+1,'event'] == 'death') {#
+					rw.predeath <- rw[1]#
+					saddata[i,'tag'] <- as.character(hold[rw.predeath,'tag'])#
+				}#
+			}	#
+		}
+}
+saddata[74,]
+saddata[which(saddata$newid==needs_tag),]
+for (i in 1:nrow(saddata)) {#
+	needs_tag <- as.character(saddata$newid[i])#
+	if (!is.na(needs_tag)) {#
+		hold <- master[which(master$newid==needs_tag),]#
+		# If there were no earlydeaths, this identifier is unique.#
+		if (nrow(hold)==1) {#
+			saddata[i,'tag'] <- as.character(hold$tag)#
+		}	#
+		# If there was at least one earlydeath, compare the date to when the bugs were alive.#
+		if (nrow(hold) > 1) {#
+			date.sad <- saddata[i,'date']#
+			rw <- which(hold$date.collection <= date.sad & hold$date.death >= date.sad)#
+			if (length(rw)==1) { saddata[i,'tag'] <- as.character(hold[rw,'tag']) }#
+			# For cases where an earlydeath died and was replaced on the same day:#
+			if (length(rw) > 1) {		#
+				event <- as.character(saddata[i,'event'])#
+				if (event == 'capture') {#
+					rw.cap <- rw[2]#
+					saddata[i,'tag'] <- as.character(hold[rw.cap,'tag'])#
+				}#
+				# If the replacement was captured *and* fed on the same day the earlydeath died:#
+				if (event == 'feed' & saddata[i-1,'event'] == 'capture') {#
+					rw.cap <- rw[2]#
+					saddata[i,'tag'] <- as.character(hold[rw.cap,'tag'])#
+				}#
+#
+				# If the original died (and was then replaced)#
+				if (event == 'death') {#
+					rw.death <- rw[1]#
+					saddata[i,'tag'] <- as.character(hold[rw.death,'tag'])#
+				}#
+				# If the original was fed on the day it died (but then died and was replaced immediately)#
+				if (event == 'feed' & saddata[i+1,'event'] == 'death') {#
+					rw.predeath <- rw[1]#
+					saddata[i,'tag'] <- as.character(hold[rw.predeath,'tag'])#
+				}#
+			}	#
+		}		#
+	}#
+}
+saddata[which(is.na(saddata$tag)),]
+ed <- read.csv("~/Dropbox/RMBL DATA/earlydeaths_compiled_forR_notags.csv")
+trtmt <- substr(ed$specid,start=1, stop=2)#
+gut <- substr(trtmt, start=1, stop=1)#
+feed <- substr(trtmt, start=2, stop=2)#
+block <- as.numeric(substr(ed$specid, start=3, stop=5))#
+#
+ed <- transform (ed, trtmt=trtmt, gut=gut, feed=feed, block=block)#
+#
+ed$date <- dates(as.character(ed$date))#
+ed$time <- times(as.character(ed$time))#
+timept <- chron(dates=ed$date, times=ed$time)#
+ed <- transform(ed, timept= timept, cumudays=NA)#
+# Create new IDs that are easier to sort in Excel.#
+ed$newid <- chartr('GgCFf','abcjk',ed$specid)#
+#
+for (i in 1:nrow(ed)) {#
+	if (ed[i,'block'] < 10) {#
+		ed[i,'newid'] <- paste(substr(ed[i,'newid'],start=1,stop=2),0,substr(ed[i,'newid'],start=3,stop=4), sep='')#
+	}#
+}	#
+#
+ed$newid <- as.factor(ed$newid)
+master <- read.csv('~/Documents/2010 STANFORD/2015_2 spring/illumina/RMBL mapping_onlyRMBL.csv')#
+master$date.collection <- dates(as.character(master$date.collection))#
+master$date.death <- dates(as.character(master$date.death))#
+#
+master <- master[which(master$tag!='Cf14_8.25'),] # Because Cf14 was included in the run twice, I am removing the instance with the incorrect date in the tag#
+#
+#data to which you need to add unique tags#
+saddata <- ed#
+#
+saddata$tag <- NA#
+head(saddata)#
+#
+i <- 74#
+#
+for (i in 1:nrow(saddata)) {#
+	needs_tag <- as.character(saddata$newid[i])#
+	if (!is.na(needs_tag)) {#
+		hold <- master[which(master$newid==needs_tag),]#
+		# If there were no earlydeaths, this identifier is unique.#
+		if (nrow(hold)==1) {#
+			saddata[i,'tag'] <- as.character(hold$tag)#
+		}	#
+		# If there was at least one earlydeath, compare the date to when the bugs were alive.#
+		if (nrow(hold) > 1) {#
+			date.sad <- saddata[i,'date']#
+			rw <- which(hold$date.collection <= date.sad & hold$date.death >= date.sad)#
+			if (length(rw)==1) { saddata[i,'tag'] <- as.character(hold[rw,'tag']) }#
+			# For cases where an earlydeath died and was replaced on the same day:#
+			if (length(rw) > 1) {		#
+				event <- as.character(saddata[i,'event'])#
+				if (event == 'capture') {#
+					rw.cap <- rw[2]#
+					saddata[i,'tag'] <- as.character(hold[rw.cap,'tag'])#
+				}#
+				# If the replacement was captured *and* fed on the same day the earlydeath died:#
+				if (event == 'feed' & saddata[i-1,'event'] == 'capture') {#
+					rw.cap <- rw[2]#
+					saddata[i,'tag'] <- as.character(hold[rw.cap,'tag'])#
+				}#
+#
+				# If the original died (and was then replaced)#
+				if (event == 'death') {#
+					rw.death <- rw[1]#
+					saddata[i,'tag'] <- as.character(hold[rw.death,'tag'])#
+				}#
+				# If the original was fed on the day it died (but then died and was replaced immediately)#
+				if (event == 'feed' & saddata[i+1,'event'] == 'death') {#
+					rw.predeath <- rw[1]#
+					saddata[i,'tag'] <- as.character(hold[rw.predeath,'tag'])#
+				}#
+			}	#
+		}		#
+	}#
+}
+saddata[which(is.na(saddata$newid)),]
+ed <- saddata
+data.frame(table(ed$tag))
+15/2
+library(chron)#
+library(lme4)#
+source('~/Documents/2010 STANFORD/2014_1 winter/Analyses/myfunctions.R', chdir = TRUE)
+ed <- read.csv("~/Dropbox/RMBL DATA/earlydeaths_compiled_forR_notags.csv")
+head(ed)
+tail(ed)
+trtmt <- substr(ed$specid,start=1, stop=2)#
+gut <- substr(trtmt, start=1, stop=1)#
+feed <- substr(trtmt, start=2, stop=2)#
+block <- as.numeric(substr(ed$specid, start=3, stop=5))#
+#
+ed <- transform (ed, trtmt=trtmt, gut=gut, feed=feed, block=block)#
+#
+ed$date <- dates(as.character(ed$date))#
+ed$time <- times(as.character(ed$time))#
+timept <- chron(dates=ed$date, times=ed$time)#
+ed <- transform(ed, timept= timept, cumudays=NA)#
+# Create new IDs that are easier to sort in Excel.#
+ed$newid <- chartr('GgCFf','abcjk',ed$specid)#
+#
+for (i in 1:nrow(ed)) {#
+	if (ed[i,'block'] < 10) {#
+		ed[i,'newid'] <- paste(substr(ed[i,'newid'],start=1,stop=2),0,substr(ed[i,'newid'],start=3,stop=4), sep='')#
+	}#
+}	#
+#
+ed$newid <- as.factor(ed$newid)
+master <- read.csv('~/Documents/2010 STANFORD/2015_2 spring/illumina/RMBL mapping_onlyRMBL.csv')#
+master$date.collection <- dates(as.character(master$date.collection))#
+master$date.death <- dates(as.character(master$date.death))#
+#
+master <- master[which(master$tag!='Cf14_8.25'),] # Because Cf14 was included in the run twice, I am removing the instance with the incorrect date in the tag#
+#
+#data to which you need to add unique tags#
+saddata <- ed#
+#
+saddata$tag <- NA#
+head(saddata)#
+for (i in 1:nrow(saddata)) {#
+	needs_tag <- as.character(saddata$newid[i])#
+	if (!is.na(needs_tag)) {#
+		hold <- master[which(master$newid==needs_tag),]#
+		# If there were no earlydeaths, this identifier is unique.#
+		if (nrow(hold)==1) {#
+			saddata[i,'tag'] <- as.character(hold$tag)#
+		}	#
+		# If there was at least one earlydeath, compare the date to when the bugs were alive.#
+		if (nrow(hold) > 1) {#
+			date.sad <- saddata[i,'date']#
+			rw <- which(hold$date.collection <= date.sad & hold$date.death >= date.sad)#
+			if (length(rw)==1) { saddata[i,'tag'] <- as.character(hold[rw,'tag']) }#
+			# For cases where an earlydeath died and was replaced on the same day:#
+			if (length(rw) > 1) {		#
+				event <- as.character(saddata[i,'event'])#
+				if (event == 'capture') {#
+					rw.cap <- rw[2]#
+					saddata[i,'tag'] <- as.character(hold[rw.cap,'tag'])#
+				}#
+				# If the replacement was captured *and* fed on the same day the earlydeath died:#
+				if (event == 'feed' & saddata[i-1,'event'] == 'capture') {#
+					rw.cap <- rw[2]#
+					saddata[i,'tag'] <- as.character(hold[rw.cap,'tag'])#
+				}#
+#
+				# If the original died (and was then replaced)#
+				if (event == 'death') {#
+					rw.death <- rw[1]#
+					saddata[i,'tag'] <- as.character(hold[rw.death,'tag'])#
+				}#
+				# If the original was fed on the day it died (but then died and was replaced immediately)#
+				if (event == 'feed' & saddata[i+1,'event'] == 'death') {#
+					rw.predeath <- rw[1]#
+					saddata[i,'tag'] <- as.character(hold[rw.predeath,'tag'])#
+				}#
+			}	#
+		}		#
+	}#
+}
+saddata[which(is.na(saddata$tag)),]
+ed <- saddata
+ed <- ed[order(ed$block,ed$gut, ed$feed,ed$date,ed$time),]
+library(chron)#
+library(lme4)#
+source('~/Documents/2010 STANFORD/2014_1 winter/Analyses/myfunctions.R', chdir = TRUE)
+ed <- read.csv("~/Dropbox/RMBL DATA/earlydeaths_compiled_forR_notags.csv")
+trtmt <- substr(ed$specid,start=1, stop=2)#
+gut <- substr(trtmt, start=1, stop=1)#
+feed <- substr(trtmt, start=2, stop=2)#
+block <- as.numeric(substr(ed$specid, start=3, stop=5))#
+#
+ed <- transform (ed, trtmt=trtmt, gut=gut, feed=feed, block=block)#
+#
+ed$date <- dates(as.character(ed$date))#
+ed$time <- times(as.character(ed$time))#
+timept <- chron(dates=ed$date, times=ed$time)#
+ed <- transform(ed, timept= timept, cumudays=NA)#
+# Put into chronologial order by bug.#
+ed <- ed[order(ed$block,ed$gut, ed$feed, ed$date, ed$time),]#
+# Calculate cumulative lifespan in lab for each measurement.#
+ed <- droplevels(ed)#
+#
+bugs <- unique(ed$tag)#
+#
+for (i in 1:length(bugs)) {#
+	bug <- as.character(bugs[i])#
+	bugdata <- ed[which(ed$tag==bug),]#
+	firstoccur <- min(which(ed$tag == bug))#
+	#lastoccur <- max(which(ed$specid == bug))#
+	#if (ed[firstoccur,'event'] != 'capture') print(paste("error in capture for ",bug))#
+	#if (ed[lastoccur,'event'] != 'death') print(paste("error in death for ",bug))#
+	ed[firstoccur, 'cumudays'] <- 0#
+	for (j in 1:nrow(bugdata)) {#
+			ed[firstoccur+j, 'cumudays'] <- ( ed[firstoccur+j,'timept']- ed[firstoccur,'timept'] )#
+	}#
+}#
+#
+rownames(ed) <- NULL
+nrow(ed)
+tail(ed)
+ed <- read.csv("~/Dropbox/RMBL DATA/earlydeaths_compiled_forR_notags.csv")
+trtmt <- substr(ed$specid,start=1, stop=2)#
+gut <- substr(trtmt, start=1, stop=1)#
+feed <- substr(trtmt, start=2, stop=2)#
+block <- as.numeric(substr(ed$specid, start=3, stop=5))#
+#
+ed <- transform (ed, trtmt=trtmt, gut=gut, feed=feed, block=block)#
+#
+ed$date <- dates(as.character(ed$date))#
+ed$time <- times(as.character(ed$time))#
+timept <- chron(dates=ed$date, times=ed$time)#
+ed <- transform(ed, timept= timept, cumudays=NA)
+ed <- ed[order(ed$block,ed$gut, ed$feed, ed$date, ed$time),]
+ed <- droplevels(ed)#
+#
+bugs <- unique(ed$tag)
+for (i in 1:length(bugs)) {#
+	bug <- as.character(bugs[i])#
+	bugdata <- ed[which(ed$tag==bug),]#
+	firstoccur <- min(which(ed$tag == bug))#
+	#lastoccur <- max(which(ed$specid == bug))#
+	#if (ed[firstoccur,'event'] != 'capture') print(paste("error in capture for ",bug))#
+	#if (ed[lastoccur,'event'] != 'death') print(paste("error in death for ",bug))#
+	ed[firstoccur, 'cumudays'] <- 0#
+	for (j in 1:nrow(bugdata)) {#
+			ed[firstoccur+j, 'cumudays'] <- ( ed[firstoccur+j,'timept']- ed[firstoccur,'timept'] )#
+	}#
+}
+ed$cumudays
+i
+bug <- as.character(bugs[i])
+bug
+library(chron)#
+library(lme4)#
+source('~/Documents/2010 STANFORD/2014_1 winter/Analyses/myfunctions.R', chdir = TRUE)
+load('~/Dropbox/CR feeding trial MS/final_model_revision.Rdata', verbose=T)
+load('~/Documents/2010 STANFORD/2015_1 winter/CR feeding trial MS/final_model_revision.Rdata', verbose=T)
+summary(final_model_revision)
+nobs(final_model_revision)
+str(final_model_revisio)
+str(final_model_revision)
+final_model_revision@frame
+names(final_model_revision@frame)
+table(final_model_revision@frame$SpCode)
+newdata <- expand.grid(Nut=c("Alb","AmCl","Cas","NaCl","Ur"), Diet2=c("fruit","nectar"), Sex=c("F","M"))  #NB: be careful that these are in the correct order (i.e. the same order as the "levels" for each variable)
+names(newdata)#
+newdata <- cbind(newdata,Pref=0)
+sal <- salamander(final_model, newdata, link="logit")
+sal <- salamander(final_model_revision, newdata, link="logit")
+sal$labs<-paste(sal$Nut, sal$Diet2, sal$Sex, sep="")#
+sal$groupings<-factor(sal$Nut) #
+#
+sal$phi[sal$thi==1]<-NA#
+sal$plo[sal$tlo==0]<-NA#
+#
+sal$psehi<-((sal$phi-sal$output)/2)+ sal$output#
+sal$pselo<-sal$output-((sal$output-sal$plo)/2)#
+#
+plot(as.factor(sal$groupings), sal$output, las=2)#
+i<-order(sal$groupings)
+salII<-sal[i,]
+salII$gnums<-as.numeric(salII$groupings) + rep(c(-0.15,-0.05,0.05,0.15),5)
+palette(c("firebrick3","goldenrod1")) #
+#
+plot(salII$gnums, salII$output, xaxt="n", xlab="Substance offered", ylab="Acceptance probability", ylim=c(0,.44),type="n", cex.lab=1.2, main="Pref ~ Nut*Diet2 + Nut*Sex + (1|SpCode/Indiv)")#
+arrows(salII$gnums, salII$pselo, salII$gnums, salII$psehi, col=salII$Diet2, lty=c(1,3)[salII$Sex], length=0, lwd=3)#
+points(salII$gnums, salII$output, col=salII$Diet2, pch=c(16,1)[salII$Sex], cex=1.4, lwd=2)#
+axis(1, at=1:5, labels=c("Albumin","Ammonium chloride","Amino acids","NaCl","Urea"), las=1)#
+legend(0.76,0.455, c("Fruit-feeding females (N=92)","Nectar-feeding females (N=31)","Fruit-feeding males (N=148)","Nectar-feeding males (N=90)"), pch=c(16,16,1,1), col=c(1,2,1,2), lty=c(1,1,3,3), pt.cex=1.3, lwd=2, bty="n")
+legend(0.76,0.455, c("Fruit-feeding females (N=92)","Nectar-feeding females (N=31)","Fruit-feeding males (N=148)","Nectar-feeding males (N=90)"), pch=c(16,16,1,1), col=c(1,2,1,2), lty=c(1,1,3,3), pt.cex=1.3, lwd=2, bty="n", cex=.9)
+legend(0.76,0.455, c("Fruit-feeding females (N=92)","Nectar-feeding females (N=31)","Fruit-feeding males (N=148)","Nectar-feeding males (N=90)"), pch=c(16,16,1,1), col=c(1,2,1,2), lty=c(1,1,3,3), pt.cex=1.3, lwd=2, bty="n", cex=1)
+plot(salII$gnums, salII$output, xaxt="n", xlab="Substance offered", ylab="Acceptance probability", ylim=c(0,.44),type="n", cex.lab=1.2, main="Pref ~ Nut*Diet2 + Nut*Sex + (1|SpCode/Indiv)")#
+arrows(salII$gnums, salII$pselo, salII$gnums, salII$psehi, col=salII$Diet2, lty=c(1,3)[salII$Sex], length=0, lwd=3)#
+points(salII$gnums, salII$output, col=salII$Diet2, pch=c(16,1)[salII$Sex], cex=1.4, lwd=2)#
+axis(1, at=1:5, labels=c("Albumin","Ammonium chloride","Amino acids","NaCl","Urea"), las=1)#
+legend(0.76,0.455, c("Fruit-feeding females (N=92)","Nectar-feeding females (N=31)","Fruit-feeding males (N=148)","Nectar-feeding males (N=90)"), pch=c(16,16,1,1), col=c(1,2,1,2), lty=c(1,1,3,3), pt.cex=1.3, lwd=2, bty="n", cex=1)
+plot(salII$gnums, salII$output, xaxt="n", xlab="Substance offered", ylab="Acceptance probability", ylim=c(0,.44),type="n", cex.lab=1.2, main="Pref ~ Nut*Diet2 + Nut*Sex + (1|SpCode/Indiv)")#
+arrows(salII$gnums, salII$pselo, salII$gnums, salII$psehi, col=salII$Diet2, lty=c(1,3)[salII$Sex], length=0, lwd=3)#
+points(salII$gnums, salII$output, col=salII$Diet2, pch=c(16,1)[salII$Sex], cex=1.4, lwd=2)#
+axis(1, at=1:5, labels=c("Albumin","Ammonium chloride","Amino acids","NaCl","Urea"), las=1)#
+legend(0.76,0.455, c("Fruit-feeding females (N=92)","Nectar-feeding females (N=31)","Fruit-feeding males (N=148)","Nectar-feeding males (N=90)"), pch=c(16,16,1,1), col=c(1,2,1,2), lty=c(1,1,3,3), pt.cex=1.3, lwd=2, bty="n")
+legend(0.76,0.455, c("Fruit-feeding females (N=92)","Nectar-feeding females (N=31)","Fruit-feeding males (N=148)","Nectar-feeding males (N=90)"), pch=c(16,16,1,1), col=c(1,2,1,2), lty=c(1,1,3,3), pt.cex=1.3, lwd=2, bty="n", cex=1)
+plot(salII$gnums, salII$output, xaxt="n", xlab="Substance offered", ylab="Acceptance probability", ylim=c(0,.44),type="n", cex.lab=1.2, main="Pref ~ Nut*Diet2 + Nut*Sex + (1|SpCode/Indiv)")#
+arrows(salII$gnums, salII$pselo, salII$gnums, salII$psehi, col=salII$Diet2, lty=c(1,3)[salII$Sex], length=0, lwd=3)#
+points(salII$gnums, salII$output, col=salII$Diet2, pch=c(16,1)[salII$Sex], cex=1.4, lwd=2)#
+axis(1, at=1:5, labels=c("Albumin","Ammonium chloride","Amino acids","NaCl","Urea"), las=1)#
+legend(0.76,0.455, c("Fruit-feeding females (N=92)","Nectar-feeding females (N=31)","Fruit-feeding males (N=148)","Nectar-feeding males (N=90)"), pch=c(16,16,1,1), col=c(1,2,1,2), lty=c(1,1,3,3), pt.cex=1.3, lwd=2, bty="n")
+plot(salII$gnums, salII$output, xaxt="n", xlab="Substance offered", ylab="Acceptance probability", ylim=c(0,.44),type="n", cex.lab=1.2, main="Pref ~ Nut*Diet2 + Nut*Sex + (1|SpCode/Indiv)")#
+arrows(salII$gnums, salII$pselo, salII$gnums, salII$psehi, col=salII$Diet2, lty=c(1,3)[salII$Sex], length=0, lwd=3)#
+points(salII$gnums, salII$output, col=salII$Diet2, pch=c(16,1)[salII$Sex], cex=1.4, lwd=2)#
+axis(1, at=1:5, labels=c("Albumin","Ammonium chloride","Amino acids","NaCl","Urea"), las=1)#
+legend(0.76,0.455, c("Fruit-feeding females (N=92)","Nectar-feeding females (N=31)","Fruit-feeding males (N=148)","Nectar-feeding males (N=90)"), pch=c(16,16,1,1), col=c(1,2,1,2), lty=c(1,1,3,3), pt.cex=1.3, lwd=2, bty="n", cex=1.01)
+legend(0.76,0.455, c("Fruit-feeding females (N=92)","Nectar-feeding females (N=31)","Fruit-feeding males (N=148)","Nectar-feeding males (N=90)"), pch=c(16,16,1,1), col=c(1,2,1,2), lty=c(1,1,3,3), pt.cex=1.3, lwd=2, bty="n", y.intersp=1)
+legend(0.76,0.455, c("Fruit-feeding females (N=92)","Nectar-feeding females (N=31)","Fruit-feeding males (N=148)","Nectar-feeding males (N=90)"), pch=c(16,16,1,1), col=c(1,2,1,2), lty=c(1,1,3,3), pt.cex=1.3, lwd=2, bty="n", y.intersp=1.1)
+plot(salII$gnums, salII$output, xaxt="n", xlab="Substance offered", ylab="Acceptance probability", ylim=c(0,.44),type="n", cex.lab=1.2, main="Pref ~ Nut*Diet2 + Nut*Sex + (1|SpCode/Indiv)")#
+arrows(salII$gnums, salII$pselo, salII$gnums, salII$psehi, col=salII$Diet2, lty=c(1,3)[salII$Sex], length=0, lwd=3)#
+points(salII$gnums, salII$output, col=salII$Diet2, pch=c(16,1)[salII$Sex], cex=1.4, lwd=2)#
+axis(1, at=1:5, labels=c("Albumin","Ammonium chloride","Amino acids","NaCl","Urea"), las=1)#
+legend(0.76,0.455, c("Fruit-feeding females (N=92)","Nectar-feeding females (N=31)","Fruit-feeding males (N=148)","Nectar-feeding males (N=90)"), pch=c(16,16,1,1), col=c(1,2,1,2), lty=c(1,1,3,3), pt.cex=1.3, lwd=2, bty="n", y.intersp=1.0.5)
+legend(0.76,0.455, c("Fruit-feeding females (N=92)","Nectar-feeding females (N=31)","Fruit-feeding males (N=148)","Nectar-feeding males (N=90)"), pch=c(16,16,1,1), col=c(1,2,1,2), lty=c(1,1,3,3), pt.cex=1.3, lwd=2, bty="n", y.intersp=1.05)
+legend(0.76,0.455, c("Fruit-feeding females (N=92)","Nectar-feeding females (N=31)","Fruit-feeding males (N=148)","Nectar-feeding males (N=90)"), pch=c(16,16,1,1), col=c(1,2,1,2), lty=c(1,1,3,3), pt.cex=1.3, lwd=2, bty="n", y.intersp=1.1)
+plot(salII$gnums, salII$output, xaxt="n", xlab="Substance offered", ylab="Acceptance probability", ylim=c(0,.44),type="n", cex.lab=1.2, main="Pref ~ Nut*Diet2 + Nut*Sex + (1|SpCode/Indiv)")#
+arrows(salII$gnums, salII$pselo, salII$gnums, salII$psehi, col=salII$Diet2, lty=c(1,3)[salII$Sex], length=0, lwd=3)#
+points(salII$gnums, salII$output, col=salII$Diet2, pch=c(16,1)[salII$Sex], cex=1.4, lwd=2)#
+axis(1, at=1:5, labels=c("Albumin","Ammonium chloride","Amino acids","NaCl","Urea"), las=1)#
+legend(0.76,0.455, c("Fruit-feeding females (N=92)","Nectar-feeding females (N=31)","Fruit-feeding males (N=148)","Nectar-feeding males (N=90)"), pch=c(16,16,1,1), col=c(1,2,1,2), lty=c(1,1,3,3), pt.cex=1.3, lwd=2, bty="n", y.intersp=1.1)
+load('~/Documents/2010 STANFORD/2015_1 winter/CR feeding trial MS/final_model.Rdata')
+newdata <- expand.grid(Nut=c("Alb","AmCl","Cas","NaCl","Ur"), Diet2=c("fruit","nectar"), Sex=c("F","M"))  #NB: be careful that these are in the correct order (i.e. the same order as the "levels" for each variable)
+names(newdata)#
+newdata <- cbind(newdata,Pref=0)#
+#
+sal <- salamander(final_model, newdata, link="logit")#
+#
+sal$labs<-paste(sal$Nut, sal$Diet2, sal$Sex, sep="")#
+sal$groupings<-factor(sal$Nut) #
+#
+sal$phi[sal$thi==1]<-NA#
+sal$plo[sal$tlo==0]<-NA#
+#
+sal$psehi<-((sal$phi-sal$output)/2)+ sal$output#
+sal$pselo<-sal$output-((sal$output-sal$plo)/2)#
+#
+plot(as.factor(sal$groupings), sal$output, las=2)#
+i<-order(sal$groupings)#
+#
+salII<-sal[i,]#
+salII$gnums<-as.numeric(salII$groupings) + rep(c(-0.15,-0.05,0.05,0.15),5)#
+#
+#palette(c("black","grey"))#
+palette(c("firebrick3","goldenrod1")) #
+#
+plot(salII$gnums, salII$output, xaxt="n", xlab="Substance offered", ylab="Acceptance probability", ylim=c(0,.44),type="n", cex.lab=1.2, main="Pref ~ Nut*Diet2 + Nut*Sex + (1|SpCode/Indiv)")#
+arrows(salII$gnums, salII$pselo, salII$gnums, salII$psehi, col=salII$Diet2, lty=c(1,3)[salII$Sex], length=0, lwd=3)#
+points(salII$gnums, salII$output, col=salII$Diet2, pch=c(16,1)[salII$Sex], cex=1.4, lwd=2)#
+axis(1, at=1:5, labels=c("Albumin","Ammonium chloride","Amino acids","NaCl","Urea"), las=1)#
+legend(0.76,0.455, c("Fruit-feeding females (N=92)","Nectar-feeding females (N=46)","Fruit-feeding males (N=148)","Nectar-feeding males (N=128)"), pch=c(16,16,1,1), col=c(1,2,1,2), lty=c(1,1,3,3), pt.cex=1.3, lwd=2, bty="n")
+legend(0.76,0.455, c("Fruit-feeding females (N=92)","Nectar-feeding females (N=46)","Fruit-feeding males (N=148)","Nectar-feeding males (N=128)"), pch=c(16,16,1,1), col=c(1,2,1,2), lty=c(1,1,3,3), pt.cex=1.3, lwd=2, bty="n", y.intersp=1.1)
+plot(salII$gnums, salII$output, xaxt="n", xlab="Substance offered", ylab="Acceptance probability", ylim=c(0,.44),type="n", cex.lab=1.2, main="Pref ~ Nut*Diet2 + Nut*Sex + (1|SpCode/Indiv)")#
+arrows(salII$gnums, salII$pselo, salII$gnums, salII$psehi, col=salII$Diet2, lty=c(1,3)[salII$Sex], length=0, lwd=3)#
+points(salII$gnums, salII$output, col=salII$Diet2, pch=c(16,1)[salII$Sex], cex=1.4, lwd=2)#
+axis(1, at=1:5, labels=c("Albumin","Ammonium chloride","Amino acids","NaCl","Urea"), las=1)#
+legend(0.76,0.455, c("Fruit-feeding females (N=92)","Nectar-feeding females (N=46)","Fruit-feeding males (N=148)","Nectar-feeding males (N=128)"), pch=c(16,16,1,1), col=c(1,2,1,2), lty=c(1,1,3,3), pt.cex=1.3, lwd=2, bty="n", y.intersp=1.1)
+setwd('~/Documents/2010 STANFORD/2015_3 summer/frunec/CR_frunec')
+require(phyloseq)#
+require(ape)#
+library(ggplot2)
+samps <- read.table('~/Documents/2010 STANFORD/2015_3 summer/frunec/CR_frunec/frunec_16s_otutable.txt',row.names=1, header=T)
+mat <- data.matrix(samps, rownames.force = T)
+samps <- otu_table(mat, taxa_are_rows=T)
+tax <- read.csv('~/Documents/2010 STANFORD/2015_3 summer/frunec/CR_frunec/repset_tax_assignments.csv', row.names=1, header=T)
+taxmat <- as.matrix(tax,rownames.force=T)
+taxtab <- tax_table(taxmat)
+map <- read.csv('~/Documents/2010 STANFORD/2015_3 summer/frunec/CR_frunec/mapping_fn.csv', row.names=1, header=T)
+map <- sample_data(map)
+tree <- read.tree('~/Documents/2010 STANFORD/2015_3 summer/frunec/CR_frunec/rep_set.tre')
+bacteria <- merge_phyloseq(samps,taxtab,map,tree)
+noeuks<-subset_taxa(bacteria, kingdom!="Unclassified")#
+noeuks<-subset_taxa(noeuks, kingdom!="Archaea")#
+noeuks<-subset_taxa(noeuks, phylum!="")#
+noeuks<-subset_taxa(noeuks, class!="Chloroplast")#
+noeuks<-subset_taxa(noeuks, family!="mitochondria")
+zero_samples=which(taxa_sums(noeuks)==0)
+length(zero_samples)
+noeuks=prune_taxa(taxa_sums(noeuks)>0,noeuks)
+noeuks_f = filter_taxa(noeuks, function(x) sum(x > 3) > (0.01*length(x)), TRUE)#
+dim(otu_table(noeuks))#
+dim(otu_table(noeuks_f))
+rare <- rarefy_even_depth(noeuks_f, rngseed=1, verbose=T)
+names(sample_data(rare))
+sample_data(rare)$foodtype
+sample_data(rare)$foodtype <- reorder.factor(sample_data(rare)$foodtype, new.order=c("fruit", "nectar", "control", "eb", "pb"))
+load('~/Documents/2010 STANFORD/2015_3 summer/frunec/CR_frunec/frunec_chem.Rdata')
+load('~/Documents/2010 STANFORD/2015_3 summer/frunec/CR_frunec/frunec_chem.Rdata', verbose=T)
+head(chem)
+chem$SampleName
+sample_data(rare)
+head(sample_data(rare))
+rownames(sample_data(rare))
+chem$SampleName
+paste('fn', chem$SampleName, sep='')
+chem$SampleName <- paste('fn', chem$SampleName, sep='')
+setdiff(chem$SampleName, rownames(sample_data(rare)))
+setdiff(rownames(sample_data(rare)), chem$SampleName)
+intersect(chem$SampleName, rownames(sample_data(rare)))
