@@ -1,281 +1,3 @@
-library(lme4)
-source('~/Documents/2010 STANFORD/2014_1 winter/Analyses/myfunctions.R', chdir = TRUE)
-rmbl <- read.csv("~/Dropbox/RMBL DATA/RMBL_COMPILED_forR2.csv")
-ed <- read.csv("~/Dropbox/RMBL DATA/earlydeaths_compiled_forR.csv")
-names(rmbl)
-names(ed)
-ed <- read.csv("~/Dropbox/RMBL DATA/earlydeaths_compiled_forR_notags.csv")
-names(ed)
-rmbl <- rbind(rmbl,ed)
-trtmt <- substr(rmbl$specid,start=1, stop=2)#
-gut <- substr(trtmt, start=1, stop=1)#
-feed <- substr(trtmt, start=2, stop=2)#
-block <- as.numeric(substr(rmbl$specid, start=3, stop=5))#
-#
-rmbl <- transform (rmbl, trtmt=trtmt, gut=gut, feed=feed, block=block) #NB: "E" bugs will not parse correctly.#
-#
-rmbl$date <- dates(as.character(rmbl$date))#
-rmbl$time <- times(as.character(rmbl$time))#
-timept <- chron(dates=rmbl$date, times=rmbl$time)#
-rmbl <- transform(rmbl, timept= timept, cumudays=NA)#
-#
-# Put into chronologial order by bug.#
-rmbl <- rmbl[order(rmbl$block,rmbl$gut,rmbl$feed,rmbl$date,rmbl$time),]
-rmbl[which(rmbl$gut=='E'),]
-eee <- read.csv("eeee_withlifespans.csv")
-eee <- read.csv("~/Dropbox/RMBL DATA/eeee_withlifespans.csv")
-names(eee)
-names(rmbl)
-rmbl <- read.csv("~/Dropbox/RMBL DATA/RMBL_COMPILED_forR2.csv")
-names(rmbl)
-names(eee)
-library(chron)
-library(lme4)
-source('~/Documents/2010 STANFORD/2014_1 winter/Analyses/myfunctions.R', chdir = TRUE)
-rmbl <- read.csv("~/Dropbox/RMBL DATA/RMBL_COMPILED_forR2.csv")
-ed <- read.csv("~/Dropbox/RMBL DATA/earlydeaths_compiled_forR_notags.csv")
-names(rmbl)==names(ed)
-rmbl <- rbind(rmbl,ed)
-rmbl <- read.csv("~/Dropbox/RMBL DATA/RMBL_COMPILED_forR2.csv")
-rmbl <- transform(rmbl,bug.type='exp')
-head(rmbl)
-ed <- read.csv("~/Dropbox/RMBL DATA/earlydeaths_compiled_forR_notags.csv")
-ed <- transform(ed, bug.type="earlydeath")
-head(ed)
-rmbl <- rbind(rmbl,ed)
-head(rmbl)
-rmbl
-nrow(rmbl)
-trtmt <- substr(rmbl$specid,start=1, stop=2)#
-gut <- substr(trtmt, start=1, stop=1)#
-feed <- substr(trtmt, start=2, stop=2)#
-block <- as.numeric(substr(rmbl$specid, start=3, stop=5))#
-rmbl <- transform (rmbl, trtmt=trtmt, gut=gut, feed=feed, block=block)
-ed$specid
-rmbl$specid
-rmbl$date <- dates(as.character(rmbl$date))#
-rmbl$time <- times(as.character(rmbl$time))#
-timept <- chron(dates=rmbl$date, times=rmbl$time)#
-rmbl <- transform(rmbl, timept= timept, cumudays=NA)#
-#
-rmbl <- rmbl[order(rmbl$block,rmbl$gut,rmbl$feed,rmbl$date,rmbl$time),]
-rmbl <- rmbl[which(rmbl$gut!='E'),]
-rmbl <- droplevels(rmbl)#
-#
-bugs <- unique(rmbl$specid)#
-#
-for (i in 1:101) {#
-	bug <- as.character(bugs[i])#
-	bugdata <- rmbl[which(rmbl$specid==bug),]#
-	firstoccur <- min(which(rmbl$specid == bug))#
-	#lastoccur <- max(which(rmbl$specid == bug))#
-	#if (rmbl[firstoccur,'event'] != 'capture') print(paste("error in capture for ",bug))#
-	#if (rmbl[lastoccur,'event'] != 'death') print(paste("error in death for ",bug))#
-	rmbl[firstoccur, 'cumudays'] <- 0#
-	for (j in 1:nrow(bugdata)) {#
-			rmbl[firstoccur+j, 'cumudays'] <- ( rmbl[firstoccur+j,'timept']- rmbl[firstoccur,'timept'] )#
-	}#
-}
-tail(rmbl)
-nrow(rmbl)
-rmbl <- rmbl[1:3133,] #get rid of extraneous empty row
-tail(rmbl)
-rmbl$translated.days <- round(rmbl$cumudays,0)
-eee <- read.csv("~/Dropbox/RMBL DATA/eeee_withlifespans.csv")
-names(eee)
-setdiff(names(rmbl),names(eee))
-eee <- transform(eee, bug.type="E")
-head(eee)
-rmbl <- rbind(rmbl, eee)
-eee <- read.csv("~/Dropbox/RMBL DATA/eeee_withlifespans.csv")
-timept <- chron(dates=eee$date, times=eee$time)
-eee <- read.csv("~/Dropbox/RMBL DATA/eeee_withlifespans.csv")
-eee$date <- dates(as.character(rmbl$date))
-eee$time <- times(as.character(rmbl$time))
-timept <- chron(dates=eee$date, times=eee$time)
-eee <- read.csv("~/Dropbox/RMBL DATA/eeee_withlifespans.csv")#
-eee$date <- dates(as.character(eee$date))#
-eee$time <- times(as.character(eee$time))
-timept <- chron(dates=eee$date, times=eee$time)
-chron(eee$timept)
-chron(as.character(eee$timept))
-timept
-eee <- read.csv("~/Dropbox/RMBL DATA/eeee_withlifespans.csv")#
-eee$date <- dates(as.character(eee$date))#
-eee$time <- times(as.character(eee$time))#
-eee$timept <- chron(dates=eee$date, times=eee$time)
-eee <- transform(eee, bug.type="E")
-rmbl <- rbind(rmbl,ed)
-trtmt <- substr(rmbl$specid,start=1, stop=2)#
-gut <- substr(trtmt, start=1, stop=1)#
-feed <- substr(trtmt, start=2, stop=2)#
-block <- as.numeric(substr(rmbl$specid, start=3, stop=5))#
-rmbl <- transform (rmbl, trtmt=trtmt, gut=gut, feed=feed, block=block)#
-# Put into chronologial order by bug.#
-rmbl$date <- dates(as.character(rmbl$date))#
-rmbl$time <- times(as.character(rmbl$time))#
-timept <- chron(dates=rmbl$date, times=rmbl$time)#
-rmbl <- transform(rmbl, timept= timept, cumudays=NA)#
-#
-rmbl <- rmbl[order(rmbl$block,rmbl$gut,rmbl$feed,rmbl$date,rmbl$time),]
-rmbl <- rmbl[which(rmbl$gut!='E'),]
-rmbl <- droplevels(rmbl)#
-#
-bugs <- unique(rmbl$specid)#
-#
-for (i in 1:101) {#
-	bug <- as.character(bugs[i])#
-	bugdata <- rmbl[which(rmbl$specid==bug),]#
-	firstoccur <- min(which(rmbl$specid == bug))#
-	#lastoccur <- max(which(rmbl$specid == bug))#
-	#if (rmbl[firstoccur,'event'] != 'capture') print(paste("error in capture for ",bug))#
-	#if (rmbl[lastoccur,'event'] != 'death') print(paste("error in death for ",bug))#
-	rmbl[firstoccur, 'cumudays'] <- 0#
-	for (j in 1:nrow(bugdata)) {#
-			rmbl[firstoccur+j, 'cumudays'] <- ( rmbl[firstoccur+j,'timept']- rmbl[firstoccur,'timept'] )#
-	}#
-}#
-#
-rmbl <- rmbl[1:3133,]
-rmbl$translated.days <- round(rmbl$cumudays,0)
-names(eee)==names(rmbl)
-names(eee)
-names(rmbl)
-eee <- eee[,c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,22,15,16,17,18,19,20,21)]
-names(eee)==names(rmbl)
-rmbl <- rbind(rmbl, eee)
-tail(rmbl)
-nrow(rmbl)
-library(chron)#
-library(lme4)#
-source('~/Documents/2010 STANFORD/2014_1 winter/Analyses/myfunctions.R', chdir = TRUE)
-rmbl <- read.csv("~/Dropbox/RMBL DATA/RMBL_COMPILED_forR2.csv")#
-rmbl <- transform(rmbl, bug.type='exp')
-trtmt <- substr(rmbl$specid,start=1, stop=2)#
-gut <- substr(trtmt, start=1, stop=1)#
-feed <- substr(trtmt, start=2, stop=2)#
-block <- as.numeric(substr(rmbl$specid, start=3, stop=5))#
-rmbl <- transform (rmbl, trtmt=trtmt, gut=gut, feed=feed, block=block)#
-# Put into chronologial order by bug.#
-rmbl$date <- dates(as.character(rmbl$date))#
-rmbl$time <- times(as.character(rmbl$time))#
-timept <- chron(dates=rmbl$date, times=rmbl$time)#
-rmbl <- transform(rmbl, timept= timept, cumudays=NA)#
-#
-rmbl <- rmbl[order(rmbl$block,rmbl$gut,rmbl$feed,rmbl$date,rmbl$time),]#
-# Remove the "E" bugs; I will add them back later in the appropriate format #
-rmbl <- rmbl[which(rmbl$gut!='E'),]#
-# Calculate cumulative lifespan in lab for each measurement.#
-rmbl <- droplevels(rmbl)#
-#
-bugs <- unique(rmbl$specid)#
-#
-for (i in 1:length(bugs)) {#
-	bug <- as.character(bugs[i])#
-	bugdata <- rmbl[which(rmbl$specid==bug),]#
-	firstoccur <- min(which(rmbl$specid == bug))#
-	#lastoccur <- max(which(rmbl$specid == bug))#
-	#if (rmbl[firstoccur,'event'] != 'capture') print(paste("error in capture for ",bug))#
-	#if (rmbl[lastoccur,'event'] != 'death') print(paste("error in death for ",bug))#
-	rmbl[firstoccur, 'cumudays'] <- 0#
-	for (j in 1:nrow(bugdata)) {#
-			rmbl[firstoccur+j, 'cumudays'] <- ( rmbl[firstoccur+j,'timept']- rmbl[firstoccur,'timept'] )#
-	}#
-}
-tail(rmbl)
-rmbl <- rmbl[1:2950,] #get rid of extraneous empty row
-rmbl$translated.days <- round(rmbl$cumudays,0)#
-# Add the 'E' bugs to the dataset. I manually added the 'E' bugs' treatment info to the csv below; othersise this csv was created by "RMBL data generation-- eeee.R" #
-eee <- read.csv("~/Dropbox/RMBL DATA/eeee_withlifespans.csv")#
-eee$date <- dates(as.character(eee$date))#
-eee$time <- times(as.character(eee$time))#
-eee$timept <- chron(dates=eee$date, times=eee$time)#
-#
-eee <- transform(eee, bug.type="E")#
-eee <- eee[,c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,22,15,16,17,18,19,20,21)] #make the order of the columns match.#
-#
-rmbl <- rbind(rmbl, eee)#
-#
-rmbl$block <- as.numeric(rmbl$block)
-rmbl$newid <- chartr('GgCFf','abcjk',rmbl$specid)#
-#
-for (i in 1:nrow(rmbl)) {#
-	if (rmbl[i,'block'] < 10) {#
-		rmbl[i,'newid'] <- paste(substr(rmbl[i,'newid'],start=1,stop=2),0,substr(rmbl[i,'newid'],start=3,stop=4), sep='')#
-	}#
-}	#
-#
-rmbl$newid <- as.factor(rmbl$newid)
-ed <- read.csv("~/Dropbox/RMBL DATA/earlydeaths_compiled_forR_notags.csv")
-trtmt <- substr(ed$specid,start=1, stop=2)#
-gut <- substr(trtmt, start=1, stop=1)#
-feed <- substr(trtmt, start=2, stop=2)#
-block <- as.numeric(substr(ed$specid, start=3, stop=5))#
-#
-ed <- transform (ed, trtmt=trtmt, gut=gut, feed=feed, block=block)#
-#
-ed$date <- dates(as.character(ed$date))#
-ed$time <- times(as.character(ed$time))#
-timept <- chron(dates=ed$date, times=ed$time)#
-ed <- transform(ed, timept= timept, cumudays=NA)#
-#
-# Put into chronologial order by bug.#
-ed <- ed[order(ed$block,ed$gut, ed$feed,ed$date,ed$time),]#
-# Calculate cumulative lifespan in lab for each measurement.#
-ed <- droplevels(ed)#
-#
-bugs <- unique(ed$tag)#
-#
-for (i in 1:length(bugs)) {#
-	bug <- as.character(bugs[i])#
-	bugdata <- ed[which(ed$tag==bug),]#
-	firstoccur <- min(which(ed$tag == bug))#
-	#lastoccur <- max(which(ed$specid == bug))#
-	#if (ed[firstoccur,'event'] != 'capture') print(paste("error in capture for ",bug))#
-	#if (ed[lastoccur,'event'] != 'death') print(paste("error in death for ",bug))#
-	ed[firstoccur, 'cumudays'] <- 0#
-	for (j in 1:nrow(bugdata)) {#
-			ed[firstoccur+j, 'cumudays'] <- ( ed[firstoccur+j,'timept']- ed[firstoccur,'timept'] )#
-	}#
-}#
-#
-rownames(ed) <- NULL
-tail(ed)
-bugs
-table(ed$specid)
-ed <- read.csv("~/Dropbox/RMBL DATA/earlydeaths_compiled_forR_notags.csv")
-trtmt <- substr(ed$specid,start=1, stop=2)#
-gut <- substr(trtmt, start=1, stop=1)#
-feed <- substr(trtmt, start=2, stop=2)#
-block <- as.numeric(substr(ed$specid, start=3, stop=5))#
-#
-ed <- transform (ed, trtmt=trtmt, gut=gut, feed=feed, block=block)#
-#
-ed$date <- dates(as.character(ed$date))#
-ed$time <- times(as.character(ed$time))#
-timept <- chron(dates=ed$date, times=ed$time)#
-ed <- transform(ed, timept= timept, cumudays=NA)#
-#
-# Put into chronologial order by bug.#
-ed <- ed[order(ed$block,ed$gut, ed$feed,ed$date,ed$time),]
-ed <- read.csv("~/Dropbox/RMBL DATA/earlydeaths_compiled_forR_notags.csv")
-trtmt <- substr(ed$specid,start=1, stop=2)#
-gut <- substr(trtmt, start=1, stop=1)#
-feed <- substr(trtmt, start=2, stop=2)#
-block <- as.numeric(substr(ed$specid, start=3, stop=5))#
-#
-ed <- transform (ed, trtmt=trtmt, gut=gut, feed=feed, block=block)#
-#
-ed$date <- dates(as.character(ed$date))#
-ed$time <- times(as.character(ed$time))#
-timept <- chron(dates=ed$date, times=ed$time)#
-ed <- transform(ed, timept= timept, cumudays=NA)
-master <- read.csv('~/Documents/2010 STANFORD/2015_2 spring/illumina/RMBL mapping_onlyRMBL.csv')#
-master$date.collection <- dates(as.character(master$date.collection))#
-master$date.death <- dates(as.character(master$date.death))
-master <- master[which(master$tag!='Cf14_8.25'),] # Because Cf14 was included in the run twice, I am removing the instance with the incorrect date in the tag
-saddata <- ed
-saddata$tag <- NA
 head(saddata)
 for (i in 1:nrow(saddata)) {#
 	needs_tag <- as.character(saddata$newid[i])#
@@ -872,3 +594,155 @@ chem$SampleName <- paste('fn', chem$SampleName, sep='')
 setdiff(chem$SampleName, rownames(sample_data(rare)))
 setdiff(rownames(sample_data(rare)), chem$SampleName)
 intersect(chem$SampleName, rownames(sample_data(rare)))
+load('~/Documents/2010 STANFORD/2015_3 summer/frunec/CR_frunec/frunec_chem.Rdata', verbose=T)
+head(chem)
+samps <- read.table('~/Documents/2010 STANFORD/2015_3 summer/frunec/CR_frunec/ITS_otutable.txt',row.names=1, header=T)
+head(samps)
+mat <- data.matrix(samps, rownames.force = T)
+samps <- otu_table(mat, taxa_are_rows=T)
+library(phyloseq)
+samps <- otu_table(mat, taxa_are_rows=T)
+summary(samps)
+str(samps)
+tax <- read.csv('~/Documents/2010 STANFORD/2015_3 summer/frunec/CR_frunec/ITS_taxonomy_RDPwarcup_w.confidence.csv', row.names=1, header=T)
+head(tax)
+taxmat <- as.matrix(tax,rownames.force=T)
+taxtab <- tax_table(taxmat)
+str(taxtab)
+str(map)
+map <- read.csv('~/Documents/2010 STANFORD/2015_3 summer/frunec/CR_frunec/mapping_fn.csv', row.names=1, header=T)
+map <- sample_data(map)
+str(map)
+fungi <- merge_phyloseq(samps,taxtab,map)
+str(fungi)
+str(bacteria)
+head(tax_table(fungi))
+table(tax$kingdom) # There are 18 archaeans.
+table(tax$phylum) # There are 342 OTUs with no assigned phylum.  I am removing them for now.
+table(tax$class) # There are 62 chloroplast OTUs
+levels(tax$order)
+levels(tax$family)
+sum(sample_sums(fungi)) # total number of reads
+samps <- read.table('~/Documents/2010 STANFORD/2015_3 summer/frunec/CR_frunec/16s_otutable.txt',row.names=1, header=T)#
+mat <- data.matrix(samps, rownames.force = T)#
+samps <- otu_table(mat, taxa_are_rows=T)#
+#
+# 16s taxonomy#
+tax <- read.csv('~/Documents/2010 STANFORD/2015_3 summer/frunec/CR_frunec/16s_taxonomy_RDP.csv', row.names=1, header=T)#
+taxmat <- as.matrix(tax,rownames.force=T)#
+taxtab <- tax_table(taxmat)#
+#
+# 16s mapping file#
+map <- read.csv('~/Documents/2010 STANFORD/2015_3 summer/frunec/CR_frunec/mapping_fn.csv', row.names=1, header=T)#
+map <- sample_data(map)#
+#
+# 16s tree file#
+tree <- read.tree('~/Documents/2010 STANFORD/2015_3 summer/frunec/CR_frunec/16s_rep_set.tre')#
+#
+# glue them all together#
+bacteria <- merge_phyloseq(samps,taxtab,map,tree)
+noeuks<-subset_taxa(bacteria, kingdom!="Unclassified")#
+noeuks<-subset_taxa(noeuks, kingdom!="Archaea")#
+noeuks<-subset_taxa(noeuks, phylum!="")#
+noeuks<-subset_taxa(noeuks, class!="Chloroplast")#
+noeuks<-subset_taxa(noeuks, family!="mitochondria")
+sum(sample_sums(noeuks)) # total number of reads
+require(ape)
+tree <- read.tree('~/Documents/2010 STANFORD/2015_3 summer/frunec/CR_frunec/16s_rep_set.tre')
+bacteria <- merge_phyloseq(samps,taxtab,map,tree)
+noeuks<-subset_taxa(bacteria, kingdom!="Unclassified")#
+noeuks<-subset_taxa(noeuks, kingdom!="Archaea")#
+noeuks<-subset_taxa(noeuks, phylum!="")#
+noeuks<-subset_taxa(noeuks, class!="Chloroplast")#
+noeuks<-subset_taxa(noeuks, family!="mitochondria")
+sum(sample_sums(noeuks)) # total number of reads
+samps <- read.table('~/Documents/2010 STANFORD/2015_3 summer/frunec/CR_frunec/ITS_otutable.txt',row.names=1, header=T)#
+mat <- data.matrix(samps, rownames.force = T)#
+samps <- otu_table(mat, taxa_are_rows=T)#
+#
+# ITS taxonomy#
+tax <- read.csv('~/Documents/2010 STANFORD/2015_3 summer/frunec/CR_frunec/ITS_taxonomy_RDPwarcup_w.confidence.csv', row.names=1, header=T)#
+taxmat <- as.matrix(tax,rownames.force=T)#
+taxtab <- tax_table(taxmat)#
+#
+# The mapping file has already been loaded. The dataframe is 'map'.#
+#
+# glue them all together#
+fungi <- merge_phyloseq(samps,taxtab,map)
+hist(sample_sums(fungi), breaks=20)
+range(sample_sums(fungi))
+zero_samples=which(taxa_sums(noeuks)==0)
+zero_samples
+zero_samples=which(taxa_sums(fungi)==0)
+zero_samples
+length(zero_samples)
+fungi =prune_taxa(taxa_sums(fungi)>0, fungi)
+fungi_f = filter_taxa(fungi, function(x) sum(x > 3) > (0.01*length(x)), TRUE)
+dim(otu_table(fungi))
+dim(otu_table(fungi_f))
+rare <- rarefy_even_depth(fungi_f, rngseed=1, verbose=T)
+sample_data(rare)$foodtype <- reorder.factor(sample_data(rare)$foodtype, new.order=c("fruit", "nectar", "control", "eb", "pb"))
+plot_richness(rare, x="species", measures=c("Observed", "Shannon", "InvSimpson"))+geom_boxplot()
+library(ggplot2)
+plot_richness(rare, x="species", measures=c("Observed", "Shannon", "InvSimpson"))+geom_boxplot()
+barplot(sort(taxa_sums(rare),TRUE,)[1:100],las=2,cex.axis=.7,ylab="No. Sequences",xlab="OTU",cex=0.5,main="Rank Abundance Plot for Top 100 OTUs")
+chem$SampleName <- paste('fn', chem$SampleName, sep='')
+head(chem)
+load('~/Documents/2010 STANFORD/2015_3 summer/frunec/CR_frunec/frunec_chem.Rdata', verbose=T)
+head(chem)
+names(sample_data(fungi))
+sample_data(bacteria) == sample_data(fungi)
+intersect(chem$SampleData, map$chempartner)
+head(chem$SampleData)
+head(chem)
+intersect(chem$SampleName, map$chempartner)
+length(intersect(chem$SampleName, map$chempartner))
+setdiff(chem$SampleName, map$chempartner)
+which(chem$SampleName == '554')
+chem$SampleName
+setdiff(map$chempartner, chem$SampleName)
+intersect(chem$SampleName, map$chempartner)
+map0 <- read.csv('~/Documents/2010 STANFORD/2015_3 summer/frunec/CR_frunec/mapping_fn.csv', row.names=1, header=T)
+intersect(chem$SampleName, map0$chempartner)
+map <- merge(map0, chem, by.x='chempartner', by.y='SampleName', all.x=T)
+length(map0)
+nrow(map0)
+nrow(map)
+head(map)
+tail(map)
+names(map0)
+names(chem)
+map0 <- read.csv('~/Documents/2010 STANFORD/2015_3 summer/frunec/CR_frunec/mapping_fn.csv', header=T)
+map0 <- read.csv('~/Documents/2010 STANFORD/2015_3 summer/frunec/CR_frunec/mapping_fn.csv', header=T)
+head(map0)
+rownames(map0) <- map0$X.SampleID
+map <- merge(map0, chem, by.x='chempartner', by.y='SampleName', all.x=T)
+head(map)
+names(map)[2] <- 'seqpartner'
+head(map)
+rownames(map)
+map$seqpartner
+map0 <- read.csv('~/Documents/2010 STANFORD/2015_3 summer/frunec/CR_frunec/mapping_fn.csv', header=T)
+map <- merge(map0, chem, by.x='chempartner', by.y='SampleName', all.x=T)#
+names(map)[2] <- 'seqpartner'
+head(map)
+rownames(map) <- map$seqpartner
+head(map)
+map <- sample_data(map)
+samps <- read.table('~/Documents/2010 STANFORD/2015_3 summer/frunec/CR_frunec/16s_otutable.txt',row.names=1, header=T)#
+mat <- data.matrix(samps, rownames.force = T)#
+samps <- otu_table(mat, taxa_are_rows=T)#
+#
+# 16s taxonomy#
+tax <- read.csv('~/Documents/2010 STANFORD/2015_3 summer/frunec/CR_frunec/16s_taxonomy_RDP.csv', row.names=1, header=T)#
+taxmat <- as.matrix(tax,rownames.force=T)#
+taxtab <- tax_table(taxmat)#
+#
+# mapping file#
+map <- sample_data(map)#
+#
+# 16s tree file#
+tree <- read.tree('~/Documents/2010 STANFORD/2015_3 summer/frunec/CR_frunec/16s_rep_set.tre')#
+#
+# glue them all together#
+bacteria <- merge_phyloseq(samps,taxtab,map,tree)
